@@ -1,0 +1,11 @@
+files/
+.idea/
+*.DS_Store/
+*.pyc
+
+
+losses/.DS_Store
+.DS_Store
+venv/
+
+.idea/vcs.xml

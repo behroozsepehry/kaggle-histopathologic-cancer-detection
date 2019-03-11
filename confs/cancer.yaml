@@ -1,0 +1,158 @@
+{
+  # The higher level names must be same as the class name!
+  "seed": 0,
+  "function": "train",
+  "submission_path": "files/results/cancer_submission.csv",
+
+  "Model":
+    {
+      "name": "cancer_cnn_1",
+      "in_size": 32,
+      "in_channels": 3,
+      "mid_channels": 40,
+      "out_channels": 1,
+      "activation":
+        {
+          "name": "Sigmoid",
+        },
+        "save_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
+#        "load_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
+        "train_args":
+          {
+              "n_epochs": 0,
+              "verbose": True,
+              "log_interval": 120,
+          },
+        "evaluate_args":
+          {
+              "verbose": True,
+          },
+    },
+
+  "Device":
+    {
+        "name": "cuda",
+    },
+
+  "Optimizer":
+    {
+        "name": "Adam",
+        "args":
+          {
+              "lr": 1.0e-4,
+          },
+    },
+
+  "LR_Scheduler":
+    {
+        "name": "ReduceLROnPlateau",
+        "args":
+          {
+              "verbose": True,
+              "patience": 100,
+          },
+    },
+
+  "Dataloaders":
+    {
+      "name": "histopathologic-cancer-detection",
+      "path": "files/datasets/histopathologic-cancer-detection/",
+      "ratio":
+        {
+            "val": 0.1,
+            "train": 0.9,
+        },
+      "args":
+        {
+          "batch_size": 128,
+          "pin_memory": True,
+          "num_workers": 4,
+        },
+      "transforms":
+        {
+            "train":
+                [
+                    {
+                         "name": "RandomHorizontalFlip",
+                    },
+                    {
+                         "name": "RandomVerticalFlip",
+                    },
+                    {
+                        "name": "ColorJitter",
+                        "args":
+                          {
+                              "brightness": 0.2,
+                              "contrast": 0.2,
+                              "saturation": 0.2,
+                              "hue": 0.2,
+                          },
+                    },
+
+                    {
+                        "name": "RandomAffine",
+                        "args":
+                          {
+                              "degrees": 10,
+                              "translate": [0.1, 0.1],
+                              "scale": [0.9, 1.1],
+                              "shear": 10,
+                              "resample": False,
+                              "fillcolor": 0,
+                          }
+                    },
+                    {
+                        "name": "CenterCrop",
+                        "args":
+                          {
+                              "size": 32,
+                          },
+                    },
+                ],
+            "val":
+              [
+                  {
+                      "name": "CenterCrop",
+                      "args":
+                        {
+                            "size": 32,
+                        },
+                  },
+              ],
+            "test":
+              [
+                  {
+                      "name": "CenterCrop",
+                      "args":
+                        {
+                            "size": 32,
+                        },
+                  },
+              ]
+        }
+    },
+
+  "Loss":
+    {
+      "name": "BCELoss",
+      "args":
+        {
+            "reduction": "sum",
+        }
+    },
+
+  "Logger":
+    {
+        "name": "tensorboard",
+        "flags":
+          {
+              "loss": True,
+              "data": False,
+              "conf": True,
+          },
+        "args":
+          {
+              "log_dir": "files/results/histopathologic-cancer-detection/1/logs/exp-1",
+          }
+    },
+}
