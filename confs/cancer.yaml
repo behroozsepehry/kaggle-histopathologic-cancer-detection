@@ -2,12 +2,12 @@
   # The higher level names must be same as the class name!
   "seed": 0,
   "function": "train",
-  "submission_path": "files/results/cancer_submission.csv",
+  "submission_path": "files/results/cancer_submission_96.csv",
 
   "Model":
     {
-      "name": "cancer_cnn_1",
-      "in_size": 32,
+      "name": "cancer_cnn_2",
+      "in_size": 96,
       "in_channels": 3,
       "mid_channels": 40,
       "out_channels": 1,
@@ -15,11 +15,11 @@
         {
           "name": "Sigmoid",
         },
-        "save_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
+        "save_path": "files/results/histopathologic-cancer-detection/96/model_1.p",
 #        "load_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
         "train_args":
           {
-              "n_epochs": 0,
+              "n_epochs": 1000,
               "verbose": True,
               "log_interval": 120,
           },
@@ -105,7 +105,7 @@
                         "name": "CenterCrop",
                         "args":
                           {
-                              "size": 32,
+                              "size": 96,
                           },
                     },
                 ],
@@ -115,7 +115,7 @@
                       "name": "CenterCrop",
                       "args":
                         {
-                            "size": 32,
+                            "size": 96,
                         },
                   },
               ],
@@ -125,7 +125,7 @@
                       "name": "CenterCrop",
                       "args":
                         {
-                            "size": 32,
+                            "size": 96,
                         },
                   },
               ]
@@ -152,7 +152,7 @@
           },
         "args":
           {
-              "log_dir": "files/results/histopathologic-cancer-detection/1/logs/exp-1",
+              "log_dir": "files/results/histopathologic-cancer-detection/96/logs/exp-1",
           }
     },
 }
