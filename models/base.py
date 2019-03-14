@@ -76,7 +76,7 @@ class ModelBase(nn.Module):
         t0 = time.time()
         n_epochs = kwargs.get('n_epochs', self.train_args.get('n_epochs'))
 
-        val_loss = self.evaluate_epoch(0, dataloaders.get('val'), loss_func, device, logger, name='val')['loss']
+        val_loss = self.evaluate_epoch(0, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
 
         best_val_loss = val_loss
         validated_train_loss = np.inf

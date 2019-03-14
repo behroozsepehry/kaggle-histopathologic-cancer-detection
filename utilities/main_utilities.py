@@ -62,7 +62,7 @@ def get_dataloaders(**kwargs):
 
     dataset_train = datasets.DatasetFolder(path_train, loader=dataset_folder.default_loader, extensions=['tif'],
                                            transform=transforms.Compose(transforms_dict['train']),
-                                           target_transform=lambda xxx: torch.FloatTensor([xxx * 0.8 + 0.1]))
+                                           target_transform=lambda xxx: torch.FloatTensor([xxx]))
     dataset_val = datasets.DatasetFolder(path_train, loader=dataset_folder.default_loader, extensions=['tif'],
                                          transform=transforms.Compose(transforms_dict['val']),
                                          target_transform=lambda xxx: torch.FloatTensor([xxx]))
