@@ -1,5 +1,6 @@
 import numpy as np
 import time
+from sklearn import metrics
 
 import torch
 from torch import nn
@@ -66,6 +67,11 @@ class ModelBase(nn.Module):
 
         return dict(loss=loss_epoch)
 
+    @staticmethod
+    def metric(prediction, target):
+        result = -metrics.roc_auc_score(target.cpu().numpy().astype(bool), prediction.cpu().numpy(), average=None).sum()
+        return result
+
     def train_model(self, device, dataloaders, optimizer, lr_scheduler, loss_func, logger, **kwargs):
         t0 = time.time()
         n_epochs = kwargs.get('n_epochs', self.train_args.get('n_epochs'))
@@ -76,7 +82,7 @@ class ModelBase(nn.Module):
         validated_train_loss = np.inf
         for epoch in range(1, n_epochs + 1):
             train_loss = self.train_epoch(epoch, optimizer, dataloaders['train'], loss_func, device, logger)['loss']
-            val_loss = self.evaluate_epoch(epoch, dataloaders.get('val'), loss_func, device, logger, name='val')['loss']
+            val_loss = self.evaluate_epoch(epoch, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
 
             lr_scheduler.step(val_loss)
             if val_loss < best_val_loss:
