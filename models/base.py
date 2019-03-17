@@ -69,7 +69,8 @@ class ModelBase(nn.Module):
 
     @staticmethod
     def metric(prediction, target):
-        result = -metrics.roc_auc_score(target.cpu().numpy().astype(bool), prediction.cpu().numpy(), average=None).sum()
+        result = -len(prediction) * metrics.roc_auc_score(
+            target.cpu().numpy().astype(bool), prediction.cpu().numpy(), average=None).sum()
         return result
 
     def train_model(self, device, dataloaders, optimizer, lr_scheduler, loss_func, logger, **kwargs):

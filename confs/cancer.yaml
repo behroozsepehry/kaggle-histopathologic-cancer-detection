@@ -6,11 +6,12 @@
 
   "Model":
     {
-      "name": "cancer_cnn_2",
+      "name": "cancer_cnn_4",
       "in_size": 96,
       "in_channels": 3,
       "mid_channels": 40,
       "out_channels": 1,
+      "kernel_size": 4,
       "activation":
         {
           "name": "Sigmoid",
@@ -112,21 +113,21 @@
             "val":
               [
                   {
-                      "name": "CenterCrop",
-                      "args":
-                        {
-                            "size": 96,
-                        },
+                        "name": "CenterCrop",
+                        "args":
+                          {
+                              "size": 96,
+                          },
                   },
               ],
             "test":
               [
                   {
-                      "name": "CenterCrop",
-                      "args":
-                        {
-                            "size": 96,
-                        },
+                        "name": "CenterCrop",
+                        "args":
+                          {
+                              "size": 96,
+                          },
                   },
               ]
         }
