@@ -6,12 +6,12 @@
 
   "Model":
     {
-      "name": "cancer_cnn_4",
-      "in_size": 96,
+      "name": "cancer_cnn_3",
+      "in_size": 224,
       "in_channels": 3,
-      "mid_channels": 40,
+      "mid_channels": 3,
       "out_channels": 1,
-      "kernel_size": 4,
+      "kernel_size": 8,
       "activation":
         {
           "name": "Sigmoid",
@@ -20,7 +20,7 @@
 #        "load_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
         "train_args":
           {
-              "n_epochs": 1000,
+              "n_epochs": 100,
               "verbose": True,
               "log_interval": 120,
           },
@@ -65,7 +65,7 @@
         },
       "args":
         {
-          "batch_size": 128,
+          "batch_size": 32,
           "pin_memory": True,
           "num_workers": 4,
         },
@@ -103,30 +103,30 @@
                           }
                     },
                     {
-                        "name": "CenterCrop",
+                        "name": "Resize",
                         "args":
                           {
-                              "size": 96,
+                              "size": 224,
                           },
                     },
                 ],
             "val":
               [
                   {
-                        "name": "CenterCrop",
+                        "name": "Resize",
                         "args":
                           {
-                              "size": 96,
+                              "size": 224,
                           },
                   },
               ],
             "test":
               [
                   {
-                        "name": "CenterCrop",
+                        "name": "Resize",
                         "args":
                           {
-                              "size": 96,
+                              "size": 224,
                           },
                   },
               ]
@@ -144,7 +144,7 @@
 
   "Logger":
     {
-        "name": "tensorboard",
+        "name": "",
         "flags":
           {
               "loss": True,

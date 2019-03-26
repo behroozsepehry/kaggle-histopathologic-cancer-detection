@@ -26,8 +26,8 @@ def train(settings):
     tfms = fvision.get_transforms(do_flip=True, flip_vert=True, max_rotate=.0, max_zoom=.1,
                           max_lighting=0.05, max_warp=0.)
 
-    data = fvision.ImageDataBunch.from_csv(path, csv_labels=train_lbl, folder='train', ds_tfms=tfms, size=sz, suffix='.tif',
-                                   test=test_folder, bs=bs);
+    data = fvision.ImageDataBunch.from_csv(path, csv_labels='train_labels.csv', folder='train', ds_tfms=tfms, size=sz, suffix='.tif',
+                                   test=test_folder, bs=bs)
 
     stats = data.batch_stats()
     data.normalize(stats)
@@ -50,20 +50,20 @@ def train(settings):
         ps=0.5
     )
     learn.lr_find()
-    learn.recorder.plot()
+    # learn.recorder.plot()
 
     lr = 1e-04
 
     learn.fit_one_cycle(1, lr)
-    learn.recorder.plot()
-    learn.recorder.plot_losses()
+    # learn.recorder.plot()
+    # learn.recorder.plot_losses()
 
     learn.unfreeze()
     learn.lr_find()
 
-    learn.fit_one_cycle(10, slice(1e-4, 1e-3))
-    learn.recorder.plot()
-    learn.recorder.plot_losses()
+    learn.fit_one_cycle(1, slice(1e-4, 1e-3))
+    # learn.recorder.plot()
+    # learn.recorder.plot_losses()
 
     preds, y = learn.get_preds()
     pred_score = auc_score(preds, y)
@@ -73,19 +73,22 @@ def train(settings):
     pred_score_tta = auc_score(preds, y)
     pred_score_tta
 
-    preds_test, y_test = learn.get_preds(ds_type=fvision.DatasetType.Test)
-    preds_test_tta, y_test_tta = learn.TTA(ds_type=fvision.DatasetType.Test)
-    sub = pd.read_csv(f'{path}/sample_submission.csv').set_index('id')
-    sub.head()
-    clean_fname = np.vectorize(lambda fname: str(fname).split('/')[-1].split('.')[0])
-    fname_cleaned = clean_fname(data.test_ds.items)
-    fname_cleaned = fname_cleaned.astype(str)
+    save_path = settings['Model']['save_path']
 
-    sub.loc[fname_cleaned, 'label'] = fvision.to_np(preds_test[:, 1])
-    sub.to_csv(f'submission_{pred_score}.csv')
-
-    sub.loc[fname_cleaned, 'label'] = fvision.to_np(preds_test_tta[:, 1])
-    sub.to_csv(f'submission_{pred_score_tta}.csv')
+    torch.save(dict(state_dict=learn.model.state_dict()), save_path)
+    # preds_test, y_test = learn.get_preds(ds_type=fvision.DatasetType.Test)
+    # preds_test_tta, y_test_tta = learn.TTA(ds_type=fvision.DatasetType.Test)
+    # sub = pd.read_csv(f'{path}/sample_submission.csv').set_index('id')
+    # sub.head()
+    # clean_fname = np.vectorize(lambda fname: str(fname).split('/')[-1].split('.')[0])
+    # fname_cleaned = clean_fname(data.test_ds.items)
+    # fname_cleaned = fname_cleaned.astype(str)
+    #
+    # sub.loc[fname_cleaned, 'label'] = fvision.to_np(preds_test[:, 1])
+    # sub.to_csv(f'submission_{pred_score}.csv')
+    #
+    # sub.loc[fname_cleaned, 'label'] = fvision.to_np(preds_test_tta[:, 1])
+    # sub.to_csv(f'submission_{pred_score_tta}.csv')
 
 
 def main():
