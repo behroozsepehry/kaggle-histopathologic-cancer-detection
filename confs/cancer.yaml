@@ -7,7 +7,7 @@
   "Model":
     {
       "name": "cancer_cnn_3",
-      "in_size": 224,
+      "in_size": 96,
       "in_channels": 3,
       "mid_channels": 3,
       "out_channels": 1,
@@ -102,33 +102,62 @@
                               "fillcolor": 0,
                           }
                     },
-                    {
-                        "name": "Resize",
-                        "args":
-                          {
-                              "size": 224,
-                          },
-                    },
+#                    {
+#                        "name": "Resize",
+#                        "args":
+#                          {
+#                              "size": 96,
+#                          },
+#                    },
                 ],
             "val":
               [
-                  {
-                        "name": "Resize",
+                    {
+                         "name": "RandomHorizontalFlip",
+                    },
+                    {
+                         "name": "RandomVerticalFlip",
+                    },
+                    {
+                        "name": "ColorJitter",
                         "args":
                           {
-                              "size": 224,
+                              "brightness": 0.2,
+                              "contrast": 0.2,
+                              "saturation": 0.2,
+                              "hue": 0.2,
                           },
-                  },
+                    },
+
+                    {
+                        "name": "RandomAffine",
+                        "args":
+                          {
+                              "degrees": 10,
+                              "translate": [0.1, 0.1],
+                              "scale": [0.9, 1.1],
+                              "shear": 10,
+                              "resample": False,
+                              "fillcolor": 0,
+                          }
+                    },
+#                    {
+#                        "name": "Resize",
+#                        "args":
+#                          {
+#                              "size": 96,
+#                          },
+#                    },
               ],
             "test":
               [
-                  {
-                        "name": "Resize",
-                        "args":
-                          {
-                              "size": 224,
-                          },
-                  },
+#                  {
+#                        "name": "Resize",
+#                        "args":
+#                          {
+#                              "size": 96,
+#                          },
+#                  },
               ]
         }
     },

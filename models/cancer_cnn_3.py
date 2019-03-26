@@ -14,8 +14,8 @@ class Model(base.ModelBase):
     def __init__(self, *args, **kwargs):
         super(Model, self).__init__(*args, **kwargs)
         self.cnn = models.densenet121(num_classes=1)
-        self.cnn._modules['conv0'] = nn.Conv2d(6, self.cnn._modules['conv0'].out_channels, kernel_size=7, stride=2, padding=3, bias=False)
-        nn.init.kaiming_normal(self.cnn._modules['conv0'].weight.data)
+        self.cnn._modules['features']._modules['conv0'] = nn.Conv2d(6, self.cnn._modules['features']._modules['conv0'].out_channels, kernel_size=7, stride=2, padding=3, bias=False)
+        nn.init.kaiming_normal(self.cnn._modules['features']._modules['conv0'].weight.data)
 
         activation_setting = kwargs.get('activation')
         if activation_setting:
