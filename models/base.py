@@ -77,13 +77,13 @@ class ModelBase(nn.Module):
         t0 = time.time()
         n_epochs = kwargs.get('n_epochs', self.train_args.get('n_epochs'))
 
-        val_loss = self.evaluate_epoch(0, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
+        val_loss = self._repeated_evaluate_epoch(0, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
 
         best_val_loss = val_loss
         validated_train_loss = np.inf
         for epoch in range(1, n_epochs + 1):
             train_loss = self.train_epoch(epoch, optimizer, dataloaders['train'], loss_func, device, logger)['loss']
-            val_loss = self.evaluate_epoch(epoch, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
+            val_loss = self._repeated_evaluate_epoch(epoch, dataloaders.get('val'), self.metric, device, logger, name='val')['loss']
 
             lr_scheduler.step(val_loss)
             if val_loss < best_val_loss:
@@ -94,6 +94,10 @@ class ModelBase(nn.Module):
         print('Validated train/val loss: %.4f/%.4f' % (validated_train_loss, best_val_loss))
         print('Training finished in %.2f s' % (time.time()-t0))
         return best_val_loss
+
+    def _repeated_evaluate_epoch(self, epoch, tester_loader, loss_func, device, logger, **kwargs):
+        return np.mean([self.evaluate_epoch(epoch, tester_loader, loss_func, device, logger, **kwargs)['loss']
+                        for _ in range(self.train_args.get('val_repeat', 1))])
 
     def evaluate_epoch(self, epoch, tester_loader, loss_func, device, logger, **kwargs):
         t0 = time.time()
