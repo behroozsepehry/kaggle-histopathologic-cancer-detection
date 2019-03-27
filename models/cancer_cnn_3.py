@@ -32,10 +32,11 @@ class Model(base.ModelBase):
         ])
 
     def forward(self, x):
-        x1 = self.resize_1(x)
-        x2 = self.resize_2(x)
+        x1 = F.interpolate(x, size=224, mode='bilinear', align_corners=True)
+        s = x.size(2)
+        x2 = F.interpolate(x[:, :, s//2-16:s//2+16, s//2-16:s//2+16], size=224, mode='bilinear', align_corners=True)
         xx = torch.cat((x1, x2), dim=1)
         y = self.cnn(xx).view(xx.size(0), -1)
         if self.activation:
             y = self.activation(y)
-        return 
+        return y

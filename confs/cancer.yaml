@@ -20,13 +20,14 @@
 #        "load_path": "files/results/histopathologic-cancer-detection/1/model_1.p",
         "train_args":
           {
-              "n_epochs": 100,
+              "n_epochs": 20,
               "verbose": True,
               "log_interval": 120,
           },
         "evaluate_args":
           {
               "verbose": True,
+              "val_repeat": 2,
           },
     },
 

@@ -96,8 +96,16 @@ class ModelBase(nn.Module):
         return best_val_loss
 
     def _repeated_evaluate_epoch(self, epoch, tester_loader, loss_func, device, logger, **kwargs):
-        return np.mean([self.evaluate_epoch(epoch, tester_loader, loss_func, device, logger, **kwargs)['loss']
-                        for _ in range(self.train_args.get('val_repeat', 1))])
+        val_repeat = kwargs.get('val_repeat', self.evaluate_args.get('val_repeat', 1))
+        mean_loss = np.mean([self.evaluate_epoch(epoch, tester_loader, loss_func,
+                                                device, logger, **dict(kwargs, verbose=True))['loss']
+                            for _ in range(val_repeat)])
+        name = kwargs.get('name', 'test')
+        verbose = kwargs.get('verbose', self.evaluate_args.get('verbose', False))
+        if verbose:
+            print('====> {} set mean loss: {}'.format(name, mean_loss))
+        return dict(loss=mean_loss)
+
 
     def evaluate_epoch(self, epoch, tester_loader, loss_func, device, logger, **kwargs):
         t0 = time.time()
