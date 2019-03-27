@@ -27,7 +27,7 @@
         "evaluate_args":
           {
               "verbose": True,
-              "val_repeat": 2,
+              "val_repeat": 10,
           },
     },
 
